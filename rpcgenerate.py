@@ -19,6 +19,14 @@ b_count = 0
 # TODO: Although invariant makes it safe to use, probably should turn it into
 # a local variable
 
+#read the preamble from template file and change it 
+def generate_preamble(filename, is_proxy):
+    if is_proxy:
+        template_name = "proxy.template"
+    else:
+        template_name = "stub.template"
+    return open(template_name).read().replace('IDL_NAME', filename)
+
 def generate_file(data, filename, is_proxy):
     s = generate_preamble(filename, is_proxy)
     functions_str = ''
@@ -242,14 +250,6 @@ def generate_dispatch(is_proxy, data):
         s += '\t else if (strcmp(functionNameBuffer,"' + func + '") == 0)\n'
         s += '\t\t__' + func + '();\n'
     return s
-
-#read the preamble from template file and change it 
-def generate_preamble(filename, is_proxy):
-    if is_proxy:
-        template_name = "proxy.template"
-    else:
-        template_name = "stub.template"
-    return open(template_name).read().replace('IDL_NAME', filename)
 
 if __name__ == "__main__":
     for filename in sys.argv[1:]:
