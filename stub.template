@@ -1,0 +1,60 @@
+#include <string>
+#include <cstdio>
+#include <cstring>
+#include <stdlib.h>
+
+#include "rpcproxyhelper.h"
+#include "rpcstubhelper.h"
+#include "c150grading.h"
+
+#include "IDL_NAME"
+
+using namespace std;
+using namespace C150NETWORK;
+
+#define INT_BUFFER_SIZE 16
+#define FLOAT_BUFFER_SIZE 41
+#define STRING_BUFFER_SIZE 1
+
+
+void getFunctionNameFromStream(char *buffer, unsigned int bufSize) {
+unsigned int i;
+char *bufp;
+ssize_t readlen;
+
+bufp = buffer;
+for (i=0; i< bufSize; i++) {
+    readlen = RPCSTUBSOCKET-> read(bufp, 1);
+    // check for eof or error
+    if (readlen == 0) {
+      break;
+    }
+    // check for null and bump buffer pointer
+    if (*bufp++ == '\0') {
+      break;
+    }
+  }
+}
+
+void __badFunction(char *functionName) {
+  char doneBuffer[4] = "BAD";  // to write magic value DONE + null
+  RPCSTUBSOCKET->write(doneBuffer, strlen(doneBuffer)+1);
+}
+
+FUNCTIONS
+
+//
+//   dispatchFunction()
+//
+void dispatchFunction() {
+  char functionNameBuffer[50];
+  getFunctionNameFromStream(functionNameBuffer,sizeof(functionNameBuffer));
+
+  if (!RPCSTUBSOCKET-> eof()) {
+
+    DISPATCH
+    else
+      __badFunction(functionNameBuffer);
+  }
+}
+
