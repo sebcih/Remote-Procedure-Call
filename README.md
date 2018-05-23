@@ -1,7 +1,3 @@
-# Cihan Sebzeci
-# Comp 117 Spring 2018
-____________
-
 ## About
 
 This project was completed for [Internet Scale Distributed Systems](http://www.cs.tufts.edu/comp/117/). It creates client and server code for an RPC system over TCP
